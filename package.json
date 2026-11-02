@@ -2,6 +2,7 @@
   "name": "ai-agent-learning",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "pnpm@10.34.1",
   "type": "module",
   "scripts": {
     "day01": "node --env-file=.env --import tsx src/day01/hello.ts",
