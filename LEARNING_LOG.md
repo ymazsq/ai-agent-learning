@@ -24,15 +24,17 @@
 - 代码内容：使用 OpenAI 兼容接口调用模型，分别以 temperature 0 和 1.2 回答同一问题，并打印 token 用量
 - 本地提交：`f10e774  Day1: project scaffold and first LLM API call`
 
-### 未完成事项（需用户处理）
-- [ ] **推送到 GitHub**：推送时认证失败，需用 Personal Access Token（勾选 `repo` 权限）执行 `git push -u origin main`
+### 完成状态
+- [x] **推送到 GitHub**：已推送至 `ymazsq/ai-agent-learning`（使用 ymazsq 账号 Token）
 - [x] **安装依赖**：已改用 pnpm（`pnpm install`），项目 `.npmrc` 指向官方源 `registry.npmjs.org`，类型检查通过
-- [ ] **配置 API**：`cp .env.example .env`，填入 `OPENAI_API_KEY`、`OPENAI_BASE_URL`、`OPENAI_MODEL`
-- [ ] **运行验证**：`pnpm day01`，记录两次输出差异和 token 用量
-- [ ] **Day 1 小问题**：
-  1. 为什么多轮对话时模型"记得"前面说过的话？
-  2. temperature 设为 0 是否意味着每次输出完全一样？
-  3. 一次调用的费用由哪些部分决定？
+- [x] **配置 API**：使用火山引擎方舟（OpenAI 兼容接口），配置在本地 `.env`（不提交）
+- [x] **运行验证**：`pnpm day01` 两次调用均成功；temperature=0 与 1.2 的回答措辞不同，两次 prompt 均为 46 token，completion 分别为 85 与 84
+- [ ] **Day 1 小问题**（已讲解，留待 Day 2 多轮对话时回顾）：
+  1. 为什么多轮对话时模型"记得"前面说过的话？（每次请求都会带上历史消息）
+  2. temperature 设为 0 是否意味着每次输出完全一样？（基本一致，但不保证完全相同）
+  3. 一次调用的费用由哪些部分决定？（输入 token 与输出 token，输出通常更贵）
+
+**安全提醒**：`.env.example` 曾误写入真实 API Key，需在方舟控制台作废并重新生成。
 
 ## 下一步
 - **Day 2**：流式输出（streaming）；多轮对话的历史管理，做命令行聊天程序
