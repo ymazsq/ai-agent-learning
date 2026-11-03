@@ -9,12 +9,7 @@
 - 本地路径：`/Users/zhangshaoqi/ai-agent-learning`
 
 ## 总体路线
-| 阶段 | 周次 | 主题 | 项目产出 |
-|---|---|---|---|
-| 1. LLM 基础 | W1–W3 | API、流式输出、结构化输出、Function Calling、Agent 循环、Prompt、上下文管理 | 能调用工具的 Agent（CLI + 网页版） |
-| 2. RAG | W4–W6 | Embedding、切分、pgvector、检索与 Rerank、效果调优 | 项目 1：私有知识库问答助手 |
-| 3. Agent 进阶 | W7–W10 | MCP Server、LangGraph、记忆、Human-in-the-loop、多 Agent | 项目 2：自动调研报告 Agent（或代码审查 Agent） |
-| 4. 工程化与求职 | W11–W16 | 评测、可观测性（Langfuse）、安全、部署、README 与博客、面试准备 | 作品集 + 简历，W14 起投递 |
+完整的周计划、出口标准与毕业作品见 [docs/roadmap.md](./docs/roadmap.md)。概要：Agent 核心（W1–W3）→ 检索与后端（W4–W6）→ 前端与流式 UI（W7–W9）→ Agent 进阶（W10–W11）→ 评测与工程化（W12–W14）→ 作品集与面试（W15–W16）。
 
 ## 学习记录结构（每天统一）
 每一天都按以下五项记录：
