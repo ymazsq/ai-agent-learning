@@ -21,6 +21,19 @@
 
 ## 当前进度
 
+### Day 6（2026-11-03）：最小 Agent（工具循环 + 多轮上下文）
+- **做了什么**：新增 `src/day06/agent.ts`（`pnpm day06`）。在 `openai` SDK 上手写循环，提供三个工具：`read_file`、`write_file`（限制在 `workspace/` 内，拒绝 `../` 穿越）、`run_command`（工作目录为 `workspace/`，超时 10 秒）。多轮对话沿用 Day 3 的摘要压缩，但改为按"轮"切分；失败时整轮回滚。`workspace/` 已加入 `.gitignore`
+- **要掌握什么**：一轮内的消息顺序（`user` → `assistant(tool_calls)` → `tool` → … → `assistant`）；压缩如果按消息条数切，会拆散 `tool_calls` 与 `tool` 消息，接口报错；工具错误作为 `tool` 消息回传，模型据此调整；一轮失败时要整轮回滚，否则历史残缺
+- **掌握到什么程度**：能说清为什么压缩要按轮切分；能解释 `workspace/` 限制的是文件工具的路径，而不是 `run_command` 能访问的范围
+- **对 Agent 有什么用**：这是 coding agent 的最小形态。模型读写文件、执行命令、看结果、再决定下一步。上下文压缩和工具回传是长任务能继续跑下去的基础
+- **自测题**：
+  1. 为什么压缩历史时不能简单按消息条数截断？
+  2. 一轮中间某次模型请求失败，应该保留还是回滚已经产生的消息？为什么？
+  3. `workspace/` 路径限制为什么挡不住 `run_command` 读取 `../package.json`？
+- **验证结果**：`pnpm typecheck` 通过。`pnpm day06` 四轮真实运行：写文件、读后改写、`ls`、读取 `../package.json`。第四轮的路径被拒绝，错误作为 `tool` 消息回传，模型据此给出回答。压缩按预期触发：第三轮压缩前 6 条消息，第四轮压缩前 8 条，最终保留 8 条（最近 2 轮）。桩函数验证回滚：第二轮的第二次模型请求抛错，历史回到 2 条，没有残留的 `tool_calls`。临时桩文件已删除
+- **发现的问题**：`run_command` 没有路径限制，`cat ../package.json` 可以读到 `workspace/` 之外的文件。模型还错误地说"无法用 `run_command` 绕过"，说明它对工具边界的理解并不可靠，不能依赖 prompt 约束安全。这个问题留到 Day 7 处理
+- **状态**：✅ 已完成（`run_command` 的路径限制未解决，见 Day 7）
+
 ### Day 5（2026-11-03）：Function Calling
 - **做了什么**：新增 `src/day05/tools.ts`（`pnpm day05`）。定义两个工具：`get_current_date`（返回今天日期）和 `create_task`（创建任务）。模型决定是否调用、调用哪个、传什么参数；程序执行后用 `tool` 消息回传结果，直到模型不再调用工具。最多 5 步
 - **要掌握什么**：`tools` 的 JSON Schema 描述；`tool_calls` 的返回结构；`tool` 消息通过 `tool_call_id` 和调用对应；循环终止条件（没有 `tool_calls`）；最大步数限制
@@ -98,18 +111,11 @@
 - 每个主题设定时间上限，超时即收尾。
 
 ## 下一步
-- **Day 6**：把 Day 3 的上下文管理接入 Day 5 的工具循环，手写一个能多轮对话、调用 `read_file`、`write_file`、`run_command` 的最小 Agent。开始前先写五项计划
+- **Day 7（W2）**：工具安全。危险命令拦截与确认，并解决 `run_command` 能用 `../` 访问 `workspace/` 之外文件的问题。开始前先写五项计划
 - 可选补充：Day 4 的「明天」「下周五」问题已由 Day 5 的 `get_current_date` 工具解决
 
-## 每周计划速览
-- W1：LLM API 基础、流式、结构化输出、Function Calling、手写 Agent 循环
-- W2：Prompt 工程；Next.js + Vercel AI SDK 做流式网页对话，展示工具调用过程
-- W3：上下文管理（Token 计数、截断、摘要）；Python 入门，用 Python 重写 Agent
-- W4–W6：RAG（Embedding、切分、pgvector、混合检索、Rerank），完成项目 1
-- W7–W9：MCP Server 并接入 VS Code；LangGraph 状态机；记忆与人工确认
-- W10：项目 2 综合开发
-- W11–W13：评测（LLM-as-Judge）、Langfuse 可观测性、安全、部署、博客、简历
-- W14–W16：投递简历，面试准备与冲刺
+## 周计划
+完整的周计划、出口标准与毕业作品见 [docs/roadmap.md](./docs/roadmap.md)。
 
 ## 继续学习的方式
 在新会话中发送 "Day N"（例如 "Day 2"），并附上本文件路径，我会据此从上次进度继续。每天结束时，把运行结果或报错发给我检查。

@@ -10,6 +10,7 @@
     "day03": "node --env-file=.env --import tsx src/day03/context.ts",
     "day04": "node --env-file=.env --import tsx src/day04/extract.ts",
     "day05": "node --env-file=.env --import tsx src/day05/tools.ts",
+    "day06": "node --env-file=.env --import tsx src/day06/agent.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

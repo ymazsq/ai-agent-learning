@@ -9,5 +9,6 @@
 | Day 3 | 上下文管理 | [day03.md](./day03.md) |
 | Day 4 | 结构化输出 | [day04.md](./day04.md) |
 | Day 5 | Function Calling | [day05.md](./day05.md) |
+| Day 6 | 最小 Agent（工具循环 + 多轮上下文） | [day06.md](./day06.md) |
 
 学习内容与掌握程度见 [LEARNING_LOG.md](../LEARNING_LOG.md)。
