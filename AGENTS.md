@@ -18,6 +18,7 @@
 ## 目录与命令
 
 - `src/dayNN/`：每天的示例代码，NN 为两位数字（如 `day01`、`day03`）
+- `interview/`：每天的面试题，文件名 `dayNN.md`，索引见 `interview/README.md`
 - 每天在 `package.json` 的 `scripts` 中新增一个 `dayNN` 脚本
 - 常用命令：
   - `pnpm install`：安装依赖
@@ -50,7 +51,7 @@
    - 掌握到什么程度
    - 对 Agent 有什么用
    - 自测题（2 到 3 道）
-2. **面试题**：围绕当天内容，给出 3 到 5 道常见面试题，并附上简要参考答案。题目要能检验对原理的理解，而不只是 API 用法。
+2. **面试题**：围绕当天内容，给出 3 到 5 道常见面试题，并附上简要参考答案。题目要能检验对原理的理解，而不只是 API 用法。面试题单独保存在 [interview/](./interview/) 目录下，文件名为 `dayNN.md`，并同步更新 [interview/README.md](./interview/README.md) 的索引表。
 3. **代码验证**：运行 `pnpm typecheck` 和当天的 `pnpm dayNN`，确认结果后再提交。
 
 学习内容应以"能解释清楚"为标准，而不是"能跑起来"。
