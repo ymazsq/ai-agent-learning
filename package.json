@@ -9,6 +9,7 @@
     "day02": "node --env-file=.env --import tsx src/day02/chat.ts",
     "day03": "node --env-file=.env --import tsx src/day03/context.ts",
     "day04": "node --env-file=.env --import tsx src/day04/extract.ts",
+    "day05": "node --env-file=.env --import tsx src/day05/tools.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
