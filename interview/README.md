@@ -10,5 +10,6 @@
 | Day 4 | 结构化输出 | [day04.md](./day04.md) |
 | Day 5 | Function Calling | [day05.md](./day05.md) |
 | Day 6 | 最小 Agent（工具循环 + 多轮上下文） | [day06.md](./day06.md) |
+| Day 7 | 工具安全（白名单 + 人工确认） | [day07.md](./day07.md) |
 
 学习内容与掌握程度见 [LEARNING_LOG.md](../LEARNING_LOG.md)。
