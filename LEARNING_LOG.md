@@ -96,8 +96,14 @@
 
 **安全提醒**：`.env.example` 曾误写入真实 API Key，需在方舟控制台作废并重新生成。
 
+## 计划调整（2026-11-03）
+- 采用混合方案：Day 6 起吸收 [docs/agent-research-lab-design.md](./docs/agent-research-lab-design.md) 的核心（手写 Agent 循环、真实工具、撞墙 → 对比开源实现 → 结论），同时保留 RAG、MCP、LangGraph 与面试产出。
+- 每个主题在学习记录中增加"与开源实现对比"一项。
+- 评测与安全提前到 W7–W10 Agent 进阶阶段。
+- 每个主题设定时间上限，超时即收尾。
+
 ## 下一步
-- **Day 6**：把 Day 3 的上下文管理接入 Day 5 的工具循环，形成一个能多轮对话、会调用工具的最小 Agent。开始前先写五项计划
+- **Day 6**：把 Day 3 的上下文管理接入 Day 5 的工具循环，手写一个能多轮对话、调用 `read_file`、`write_file`、`run_command` 的最小 Agent。开始前先写五项计划
 - 可选补充：Day 4 的「明天」「下周五」问题已由 Day 5 的 `get_current_date` 工具解决
 
 ## 每周计划速览
