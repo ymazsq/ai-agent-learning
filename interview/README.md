@@ -7,5 +7,6 @@
 | Day 1 | LLM API 调用与 temperature | [day01.md](./day01.md) |
 | Day 2 | 流式输出与多轮对话 | [day02.md](./day02.md) |
 | Day 3 | 上下文管理 | [day03.md](./day03.md) |
+| Day 4 | 结构化输出 | [day04.md](./day04.md) |
 
 学习内容与掌握程度见 [LEARNING_LOG.md](../LEARNING_LOG.md)。
