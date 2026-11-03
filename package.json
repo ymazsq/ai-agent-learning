@@ -7,6 +7,7 @@
   "scripts": {
     "day01": "node --env-file=.env --import tsx src/day01/hello.ts",
     "day02": "node --env-file=.env --import tsx src/day02/chat.ts",
+    "day03": "node --env-file=.env --import tsx src/day03/context.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
