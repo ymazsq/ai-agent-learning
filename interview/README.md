@@ -11,5 +11,6 @@
 | Day 5 | Function Calling | [day05.md](./day05.md) |
 | Day 6 | 最小 Agent（工具循环 + 多轮上下文） | [day06.md](./day06.md) |
 | Day 7 | 工具安全（白名单 + 人工确认） | [day07.md](./day07.md) |
+| Day 8 | System prompt 分层 | [day08.md](./day08.md) |
 
 学习内容与掌握程度见 [LEARNING_LOG.md](../LEARNING_LOG.md)。
