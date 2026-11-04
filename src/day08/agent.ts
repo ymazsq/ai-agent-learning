@@ -4,7 +4,7 @@ import type {
   ChatCompletionTool,
 } from 'openai/resources/chat/completions';
 import { execFile } from 'node:child_process';
-import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises';
+import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises'; // Day8 新增：readdir 用于列出 workspace 文件
 import { createInterface } from 'node:readline/promises';
 import path from 'node:path';
 import { promisify } from 'node:util';
@@ -21,10 +21,12 @@ const client = new OpenAI({
 });
 
 const model = process.env.OPENAI_MODEL ?? 'gpt-4o-mini';
+// Day8 新增：Day 7 只有一个固定的 SYSTEM_PROMPT 常量，这里拆成三层。
 // system prompt 分三层：基础层（固定身份）、规则层（工具约束，由常量生成）、运行时层（每次请求重新生成）。
 // 规则只是提醒模型，真正的安全边界仍由 safePath、parseCommand 和确认函数在代码中强制执行。
 const BASE_PROMPT = '你是一个会使用工具的助手，用中文回答。';
 
+// Day8 新增：规则层。规则由 ALLOWED_COMMANDS 生成，改白名单时规则文本会自动同步。
 function rulesPrompt(): string {
   return `工具规则：
 - 文件工具的路径相对于 workspace/ 目录，不能访问该目录之外的文件。
@@ -164,7 +166,8 @@ const tools: ChatCompletionTool[] = [
   },
 ];
 
-// 运行时层：日期、workspace 文件列表、摘要。每次请求前重新生成，所以状态变化会反映到下一次请求里。
+// Day8 新增：运行时层。日期、workspace 文件列表、摘要（Day 7 中摘要是拼在 SYSTEM_PROMPT 后面的）。
+// 每次请求前重新生成，所以状态变化会反映到下一次请求里。
 async function runtimeContext(): Promise<string> {
   const now = new Date().toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' });
   const files = await readdir(WORKSPACE).catch(() => [] as string[]);
@@ -176,6 +179,7 @@ async function runtimeContext(): Promise<string> {
   return lines.join('\n');
 }
 
+// Day8 新增：改为 async，把三层拼成一条 system 消息。Day 7 是同步函数，只拼接 SYSTEM_PROMPT 与摘要。
 async function buildMessages(): Promise<ChatCompletionMessageParam[]> {
   const system = [BASE_PROMPT, rulesPrompt(), `运行时状态：\n${await runtimeContext()}`].join('\n\n');
   return [{ role: 'system', content: system }, ...history];
@@ -190,7 +194,7 @@ async function runTurn(userInput: string): Promise<void> {
     for (let step = 1; step <= MAX_STEPS; step++) {
       const res = await client.chat.completions.create({
         model,
-        messages: await buildMessages(),
+        messages: await buildMessages(), // Day8 新增：改为 await，每次请求都重新生成 system prompt
         tools,
         temperature: 0,
       });
