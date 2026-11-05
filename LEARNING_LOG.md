@@ -9,7 +9,7 @@
 - 本地路径：`/Users/zhangshaoqi/ai-agent-learning`
 
 ## 总体路线
-完整的周计划、出口标准与毕业作品见 [docs/roadmap.md](./docs/roadmap.md)。概要：Agent 核心（W1–W3）→ 检索与后端（W4–W6）→ 前端与流式 UI（W7–W9）→ Agent 进阶（W10–W11）→ 评测与工程化（W12–W14）→ 作品集与面试（W15–W16）。
+完整的模块划分、阶段实践与毕业作品见 [docs/roadmap.md](./docs/roadmap.md)。概要：模型基础 → 提示词与可靠输出 → 企业知识库与 RAG → Agent 架构与工具调用 → 工作流编排 → Skill / MCP → 质量、安全与评测 → 部署与交付（共 7 个模块，对应 Day 1–28）。
 
 ## 学习记录结构（每天统一）
 每一天都按以下五项记录：
@@ -21,7 +21,7 @@
 
 ## 当前进度
 
-### Day 11（W4）：文本切分与本地向量检索
+### Day 11：文本切分与本地向量检索
 - **做了什么**：新增 `src/day11/retrieve.ts`（`pnpm day11`），用本地 embedding 模型 `Xenova/bge-small-zh-v1.5`（`@huggingface/transformers`，不调用付费接口）对 `AGENTS.md`、`LEARNING_LOG.md`、`docs/*.md`、`interview/*.md` 建向量索引。按 200 / 500 / 1000 字符切分（20% 重叠），对 5 个问题取 top-3，只要期望来源文件出现即算命中，统计 Recall@3。模型从 hf-mirror.com 下载（本机无法直连 huggingface.co）
 - **验证结果**：`pnpm typecheck` 通过；`pnpm day11` 运行结果如下（最终版语料）
 
@@ -45,8 +45,7 @@
   2. Q1 为什么不能直接判定为检索失败？评测时应该怎样处理标注有歧义的问题？
   3. 为什么向量要做归一化？归一化后点积和余弦相似度是什么关系？
 - **面试题**：[interview/day11.md](./interview/day11.md)
-- **状态**：实验与记录已完成，待提交
-- **状态**：计划已写，等待代码实现
+- **状态**：✅ 已完成（代码已提交 `7465f07`，已推送；学习已完成）
 
 ### Day 10：压缩策略对比（A 每轮摘要 / B 滑动窗口 / C 预算触发）
 - **做了什么**：新增 `src/day10/agent.ts`（`pnpm day10 A|B|C`），基于 Day 8 的工具和三层 prompt，不做持久化。策略由命令行参数选择：A 每轮超过 `KEEP_TURNS=2` 轮后把更早的消息做一次摘要；B 只保留最近 3 个用户轮次，不调用模型；C 只在请求超出预算时，先把旧的工具结果截断为 `{"truncated":true,"originalChars":N}`，仍超出再做摘要。脚本固定跑 10 轮：第 1 轮告诉模型代号 `BLUE-HERON`，中间 8 轮让模型读取 `workspace/long.txt` 的 8 个小节标题，最后问项目代号。每次运行结束输出 token 汇总。`package.json` 新增 `day10` 脚本
@@ -213,11 +212,11 @@
 - 每个主题设定时间上限，超时即收尾。
 
 ## 下一步
-- **Day 12（W5）**：按 [docs/roadmap.md](./docs/roadmap.md) 的 W5 安排，做带引用的 RAG 问答，证据不足时拒答。开始前先写五项计划
+- **Day 12（模块三：企业知识库与 RAG）**：按 [docs/roadmap.md](./docs/roadmap.md) 的模块安排，做带引用的 RAG 问答，证据不足时拒答。开始前先写五项计划
 - 可选补充：Day 4 的「明天」「下周五」问题已由 Day 5 的 `get_current_date` 工具解决
 
-## 周计划
-完整的周计划、出口标准与毕业作品见 [docs/roadmap.md](./docs/roadmap.md)。
+## 模块计划
+完整的模块划分、阶段实践与毕业作品见 [docs/roadmap.md](./docs/roadmap.md)。
 
 ## 继续学习的方式
 在新会话中发送 "Day N"（例如 "Day 2"），并附上本文件路径，我会据此从上次进度继续。每天结束时，把运行结果或报错发给我检查。
