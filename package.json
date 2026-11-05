@@ -15,14 +15,21 @@
     "day08": "node --env-file=.env --import tsx src/day08/agent.ts",
     "day09": "node --env-file=.env --import tsx src/day09/agent.ts",
     "day10": "node --env-file=.env --import tsx src/day10/agent.ts",
+    "day11": "node --env-file=.env --import tsx src/day11/retrieve.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@huggingface/transformers": "^4.3.2",
     "openai": "^4.77.0"
   },
   "devDependencies": {
+    "@types/node": "^20.17.0",
     "tsx": "^4.19.0",
-    "typescript": "^5.7.0",
-    "@types/node": "^20.17.0"
+    "typescript": "^5.7.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "onnxruntime-node": "1.17.3"
+    }
   }
 }
