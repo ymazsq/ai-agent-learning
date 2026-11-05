@@ -9,7 +9,7 @@
 - 本地路径：`/Users/zhangshaoqi/ai-agent-learning`
 
 ## 总体路线
-完整的模块划分、阶段实践与毕业作品见 [docs/roadmap.md](./docs/roadmap.md)。概要：模型基础 → 提示词与可靠输出 → 企业知识库与 RAG → Agent 架构与工具调用 → 工作流编排 → Skill / MCP → 质量、安全与评测 → 部署与交付（共 7 个模块，对应 Day 1–28）。
+完整的模块划分、阶段实践与毕业作品见 [docs/roadmap.md](./docs/roadmap.md)。概要（共 7 个模块，对应 Day 1–28）：一、模型应用与 Agent 核心 → 二、企业知识库与 RAG → 三、后端服务与持久化 → 四、Agent 工程（工作流、MCP、Skill）→ 五、评测、观测与安全 → 六、前端流式 UI 与部署交付 → 七、面试冲刺。
 
 ## 学习记录结构（每天统一）
 每一天都按以下五项记录：
@@ -208,7 +208,7 @@
 ## 计划调整（2026-11-03）
 - 采用混合方案：Day 6 起吸收 [docs/agent-research-lab-design.md](./docs/agent-research-lab-design.md) 的核心（手写 Agent 循环、真实工具、撞墙 → 对比开源实现 → 结论），同时保留 RAG、MCP、LangGraph 与面试产出。
 - 每个主题在学习记录中增加"与开源实现对比"一项。
-- 评测与安全提前到 W7–W10 Agent 进阶阶段。
+- 评测与安全提前到模块五（Day 20–22）。
 - 每个主题设定时间上限，超时即收尾。
 
 ## 下一步
