@@ -15,5 +15,6 @@
 | Day 9 | 会话持久化与恢复（JSONL） | [day09.md](./day09.md) |
 | Day 10 | 上下文压缩策略对比（摘要 / 窗口 / 预算触发） | [day10.md](./day10.md) |
 | Day 11 | 文本切分与向量检索（本地 embedding） | [day11.md](./day11.md) |
+| Day 12 | 带引用的 RAG 问答与拒答（检索层 / 生成层拒答） | [day12.md](./day12.md) |
 
 学习内容与掌握程度见 [LEARNING_LOG.md](../LEARNING_LOG.md)。

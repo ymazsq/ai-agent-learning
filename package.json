@@ -16,6 +16,7 @@
     "day09": "node --env-file=.env --import tsx src/day09/agent.ts",
     "day10": "node --env-file=.env --import tsx src/day10/agent.ts",
     "day11": "node --env-file=.env --import tsx src/day11/retrieve.ts",
+    "day12": "node --env-file=.env --import tsx src/day12/answer.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
