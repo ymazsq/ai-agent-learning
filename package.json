@@ -18,6 +18,11 @@
     "day11": "node --env-file=.env --import tsx src/day11/retrieve.ts",
     "day12": "node --env-file=.env --import tsx src/day12/answer.ts",
     "day13": "node --env-file=.env --import tsx src/day13/eval.ts",
+    "day14": "node --env-file=.env --import tsx src/day14/bm25.ts",
+    "day14b": "node --env-file=.env --import tsx src/day14/hybrid.ts",
+    "day14c": "node --env-file=.env --import tsx src/day14/rerank.ts",
+    "day14m": "node --env-file=.env --import tsx src/day14/memory-write.ts",
+    "day14r": "node --env-file=.env --import tsx src/day14/memory-read.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
