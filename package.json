@@ -23,6 +23,7 @@
     "day14c": "node --env-file=.env --import tsx src/day14/rerank.ts",
     "day14m": "node --env-file=.env --import tsx src/day14/memory-write.ts",
     "day14r": "node --env-file=.env --import tsx src/day14/memory-read.ts",
+    "day15": "node --env-file=.env --import tsx src/day15/server.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

@@ -18,5 +18,6 @@
 | Day 12 | 带引用的 RAG 问答与拒答（检索层 / 生成层拒答） | [day12.md](./day12.md) |
 | Day 13 | RAG 质量评估（Recall@K、引用正确性、错误归因） | [day13.md](./day13.md) |
 | Day 14 | 混合检索（BM25 + 向量 + RRF）与 Rerank | [day14.md](./day14.md) |
+| Day 15 | Node HTTP 服务基础与异步 I/O | [day15.md](./day15.md) |
 
 学习内容与掌握程度见 [LEARNING_LOG.md](../LEARNING_LOG.md)。
