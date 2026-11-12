@@ -24,6 +24,7 @@
     "day14m": "node --env-file=.env --import tsx src/day14/memory-write.ts",
     "day14r": "node --env-file=.env --import tsx src/day14/memory-read.ts",
     "day15": "node --env-file=.env --import tsx src/day15/server.ts",
+    "day16": "node --env-file=.env --import tsx src/day16/sse.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

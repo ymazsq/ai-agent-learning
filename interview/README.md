@@ -19,5 +19,6 @@
 | Day 13 | RAG 质量评估（Recall@K、引用正确性、错误归因） | [day13.md](./day13.md) |
 | Day 14 | 混合检索（BM25 + 向量 + RRF）与 Rerank | [day14.md](./day14.md) |
 | Day 15 | Node HTTP 服务基础与异步 I/O | [day15.md](./day15.md) |
+| Day 16 | SSE 流式接口 | [day16.md](./day16.md) |
 
 学习内容与掌握程度见 [LEARNING_LOG.md](../LEARNING_LOG.md)。
