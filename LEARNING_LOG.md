@@ -24,8 +24,8 @@
 | 模块 | 状态 | 已完成 Day | 待学 Day |
 |---|---|---|---|
 | 一、模型应用与 Agent 核心 | ✅ 已完成 | Day 1–10 | 遗留：复现"长对话爆上下文" |
-| 二、企业知识库与 RAG | 🟡 进行中 | Day 11–13；Day 14 部分完成 | Day 14 补齐（提交格式召回） |
-| 三、后端服务与持久化 | ⬜ 未开始 | — | Day 15–17 |
+| 二、企业知识库与 RAG | ✅ 已完成 | Day 11–14；Day 14 混合检索与 Rerank 已提交（`82af1a8`），长期记忆（选修）已实现 | 遗留：Day 14 候选池实验（CANDIDATES=20）；记忆去重问题 |
+| 三、后端服务与持久化 | 🟡 进行中 | Day 15（代码 `d3b4d74`）、Day 16（代码 `2c2964f`）、Day 17（代码待提交） | Day 15、16、17 学习记录的自测题待作答 |
 | 四、Agent 工程：工作流、MCP、Skill、多 Agent | ⬜ 未开始 | — | Day 18–20 |
 | 五、评测、观测与安全 | ⬜ 未开始 | — | Day 21–23 |
 | 六、前端流式 UI 与部署交付 | ⬜ 未开始 | — | Day 24–26 |
@@ -34,6 +34,58 @@
 状态说明：✅ 模块出口标准已达成；🟡 已开始但出口标准未达成；⬜ 未开始。每个 Day 的完整记录见下方"当前进度"。
 
 ## 当前进度
+
+### Day 17：SQLite 持久化与基础鉴权
+- **所属模块**：三、后端服务与持久化
+- **状态**：🟡 代码与面试题已完成，自测题待作答
+- **学习目标**：用 SQLite 替代内存存储，让用户、登录态和消息在进程重启后保留；实现 Bearer token 鉴权，未登录或 token 无效的请求返回 401
+- **做了什么**：
+  - `src/day17/app.ts`（`pnpm day17`）：基于 `node:http` 的服务，包含 `users`、`tokens`、`messages` 三张表。接口：`POST /register`（201 / 409）、`POST /login`（200 返回 token / 401）、`GET /messages` 与 `POST /messages`（需 `Authorization: Bearer`，否则 401）。默认端口 3017，数据库文件为 `workspace/day17.db`（已被 `.gitignore` 忽略）
+  - 密码使用 `crypto.scrypt` 加随机 salt 存储，校验用 `timingSafeEqual`；token 为 `randomBytes(32)` 生成的随机串
+  - 依赖变更：新增 `better-sqlite3@^11.10.0`（开发依赖 `@types/better-sqlite3`）。Node 20.19 没有内置 `node:sqlite`（需 22.5+），因此选用 `better-sqlite3`；pnpm 10 默认跳过原生构建脚本，已在 `package.json` 的 `pnpm.onlyBuiltDependencies` 中允许
+- **运行结果**：`pnpm typecheck` 通过。curl 验证：重复注册 409；错误密码 401；无 token 或无效 token 访问 `/messages` 401；正确 token 能发送含中文的消息；重启服务后，同一 token 仍能读回历史消息
+- **要掌握什么**：
+  - SQLite 文件持久化与内存状态的区别，以及会话数据应落库的原因
+  - 密码哈希（scrypt + salt）与明文存储的风险
+  - Bearer token 的完整流程：登录签发、请求携带、服务端查表校验、失效处理
+  - 401（未认证）与 403（无权限）的区别
+- **掌握到什么程度**：能解释重启后数据为何还在、为什么 token 不能用用户 ID 代替、为什么 pnpm 10 需要显式允许原生构建。尚未覆盖 token 过期、登出和 HTTPS。
+- **对 Agent 有什么用**：Agent 的会话和长任务状态需要跨请求、跨重启保留；鉴权保证每个用户只能访问自己的会话和记忆，这是多用户 Agent 服务的前提。
+- **已知限制**：
+  - token 永不过期，没有登出接口
+  - 没有限流，登录接口可被暴力尝试
+  - 单机 SQLite，不适合多实例部署，生产环境可换 Postgres
+- **自测题**：
+  1. 服务重启后，为什么同一个 token 仍然有效？如果把 `tokens` 改成内存 `Map`，会发生什么？
+  2. 为什么 `scrypt` 要配合每个用户独立的随机 salt？
+  3. 请求没有带 token 时应返回 401 还是 403？为什么？
+- **面试题**：[interview/day17.md](./interview/day17.md)
+
+### Day 16：SSE 流式接口
+- **所属模块**：三、后端服务与持久化
+- **状态**：🟡 代码与面试题已完成，自测题待作答
+- **做了什么**：
+  - `src/day16/sse.ts`（`pnpm day16`）：`GET /chat?q=` 以 `text/event-stream` 逐 token 推送，`fakeTokens` 每 80 ms 输出一个字符，不调用模型，无需 API Key；结束时发送 `done` 事件。默认端口 3016
+  - 客户端断开时，在 `res` 上监听 `close` 置位 `aborted`，循环随之停止
+  - 新增 `interview/day16.md` 并更新索引
+- **运行结果**：`pnpm typecheck` 通过。`curl -sN` 返回 `text/event-stream`，`Cache-Control: no-cache`，27 个 `token` 事件后接 `done` 事件；`curl -N -m 1` 以退出码 28 超时，服务端随之停止生成
+- **编码问题**：URL 中直接写入中文（`?q=测试`）时输出乱码，因为 `req.url` 按 latin1 解码。改用 `encodeURIComponent` 后输出正确。这是客户端问题，不是 token 切分问题
+- **要掌握什么**：
+  - SSE 是服务端单向推送的 HTTP 响应：每条事件由 `event:`、`data:` 行组成，以空行 `\n\n` 结束，缺少空行会导致事件合并或丢失
+  - 不设 `Content-Length`，用分块发送；`res.write` 可多次调用，`res.end` 结束响应
+  - 断开检测应监听 `res`（判断响应是否仍可写），而不是 `req`
+  - EventSource 只支持 GET，断线后会自动重连
+- **掌握到什么程度**：能说清 SSE 与 WebSocket 的区别（单向、基于 HTTP、自动重连）；能写出一条合法事件并解释空行的作用；能说明断开后为什么要中止上游生成。尚未接入真实模型验证。
+- **对 Agent 有什么用**：LLM 逐 token 生成，流式输出能把首字延迟降到可接受范围；客户端断开后中止上游调用，可以避免继续计费。这是模块六前端流式 UI 的服务端基础。
+- **已知限制**：
+  - 只使用模拟 token，未接入真实模型，也未测试代理和长连接超时
+  - 没有事件 `id` 与 `Last-Event-ID`，断线后无法从中间续传
+  - 没有鉴权
+- **自测题**：
+  1. 如果服务端漏掉事件末尾的空行，客户端会看到什么？
+  2. 为什么断开检测要监听 `res` 的 `close`，而不是 `req` 的事件？
+  3. SSE 和 WebSocket 相比，什么场景下 SSE 更合适？
+- **面试题**：[interview/day16.md](./interview/day16.md)
 
 ### Day 14：混合检索（BM25 + 向量 + RRF）与 Rerank
 - **所属模块**：二、企业知识库与 RAG
@@ -78,6 +130,29 @@
   1. RRF 为什么用排名而不用原始分数？它会丢掉什么信息？
   2. Rerank 的候选池 Recall@10 为 3/5，为什么精排后 Recall@3 也不可能超过 3/5？应该先调哪个参数？
   3. BM25 的前几名为什么会出现 `LEARNING_LOG.md` 中引用问题原文的块？这对评测有什么影响，应该怎样处理？
+
+### Day 14（选修）：长期记忆（抽取、写入、读取注入）
+- **所属模块**：二、企业知识库与 RAG（选修）
+- **状态**：🟡 基本完成（写入与读取已跑通；同义措辞的去重未解决，记为已知限制）
+- **做了什么**：
+  - `src/day14/memory-write.ts`（`pnpm day14m`）：从对话抽取事实，使用固定 key 词表。同 key 的新值覆盖旧值，旧记录标记 `supersededAt` 并保留，新记录写入 `createdAt`。值相同则跳过
+  - `src/day14/memory-read.ts`（`pnpm day14r`）：读取时只保留 `!supersededAt` 的当前记录，并用 BM25 与向量的 RRF 检索相关记忆后注入上下文
+  - 数据文件 `workspace/memory.json`（当前 10 条，属于个人数据）
+- **运行结果**：`pnpm day14m` 退出码 0；`pnpm day14r` 对 `career_goal` 的检索结果符合预期。`pnpm typecheck` 通过
+- **要掌握什么**：
+  - 记忆要分 key 与 value：key 固定，覆盖才有依据；value 只能靠语义判断是否相同
+  - `createdAt` 与 `supersededAt` 的区别：前者是写入时间，后者是被取代的时间，只在旧记录上设置
+  - 读取要过滤失效记录，否则旧值会与新值同时注入
+- **掌握到什么程度**：能解释覆盖与历史保留的数据结构；能说清为什么措辞不同会导致重复或误覆盖。尚未解决去重问题。
+- **对 Agent 有什么用**：跨会话的用户偏好、目标等事实需要被记住，但错误的记忆比没有记忆更有害，所以写入与读取都要可追溯。
+- **已知限制**：
+  - 同一事实措辞不同（如"晚上学"与"夜里学习"）会导致 key 不一致，产生重复或误覆盖
+  - `workspace/memory.json` 未加入 `.gitignore`，包含个人数据
+  - 尚未做跨会话评测集
+- **自测题**：
+  1. 为什么覆盖要保留旧记录，而不是直接改写？
+  2. 抽取时怎样让同一事实尽量复用同一个 key？各方案的代价是什么？
+  3. 读取时为什么必须过滤 `supersededAt`？不过滤会出现什么问题？
 
 ### Day 13：RAG 质量评估（检索命中率与引用正确性）
 - **所属模块**：二、企业知识库与 RAG
@@ -356,7 +431,10 @@
 - 每个主题设定时间上限，超时即收尾。
 
 ## 下一步
-- **Day 14 补齐**：把 Rerank 候选池从 10 扩大到 20，验证"提交信息格式"能否进入候选池并被精排提到前 3；同时修正 `LEARNING_LOG.md` 对评测问题原文的自引用噪声。补齐后再写 `interview/day14.md`
+- **模块一、二已完成**：遗留项不阻塞进入模块三，记录在"模块进度"表中
+- **模块三**：Day 17 代码与面试题已完成，待提交；Day 15、16、17 的自测题待用户作答后批改
+- **遗留（可择机处理）**：Day 14 候选池实验（CANDIDATES=20）；记忆去重方案选择，之后清空 `workspace/memory.json` 重跑 `pnpm day14m` 与 `pnpm day14r`
+- **待决定**：是否把 `workspace/memory.json` 加入 `.gitignore`
 - 可选补充：Day 4 的「明天」「下周五」问题已由 Day 5 的 `get_current_date` 工具解决
 
 ## 模块计划

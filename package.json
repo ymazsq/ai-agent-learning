@@ -25,13 +25,16 @@
     "day14r": "node --env-file=.env --import tsx src/day14/memory-read.ts",
     "day15": "node --env-file=.env --import tsx src/day15/server.ts",
     "day16": "node --env-file=.env --import tsx src/day16/sse.ts",
+    "day17": "node --env-file=.env --import tsx src/day17/app.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@huggingface/transformers": "^4.3.2",
+    "better-sqlite3": "^11.10.0",
     "openai": "^4.77.0"
   },
   "devDependencies": {
+    "@types/better-sqlite3": "^7.6.13",
     "@types/node": "^20.17.0",
     "tsx": "^4.19.0",
     "typescript": "^5.7.0"
@@ -39,6 +42,9 @@
   "pnpm": {
     "overrides": {
       "onnxruntime-node": "1.17.3"
-    }
+    },
+    "onlyBuiltDependencies": [
+      "better-sqlite3"
+    ]
   }
 }
